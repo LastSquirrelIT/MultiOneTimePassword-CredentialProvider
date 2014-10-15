@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Windows Kits\8.0\Debuggers\x64\windbg.exe" -k com:port=\\.\pipe\vm_win7_x86,baud=115200,pipe,reconnect,resets=0

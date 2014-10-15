@@ -1,0 +1,3 @@
+host: SRV*S:\Dev\WinDbgSymbols*http://msdl.microsoft.com/download/symbols
+
+target: .sympath SRV*C:\DebugSymbols*http://msdl.microsoft.com/download/symbols;C:\DebugSymbols\MOTPCP

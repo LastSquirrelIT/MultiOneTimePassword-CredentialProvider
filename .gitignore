@@ -1,0 +1,54 @@
+/bin
+/helpers/Release
+/helpers/x64
+/MultiOneTimePasswordCredentialProvider/x64
+/MultiOneTimePasswordCredentialProvider/Release
+/MultiOneTimePasswordCredentialProviderFilter/x64
+/MultiOneTimePasswordCredentialProviderFilter/Release
+/MultiOneTimePasswordExternalMultiOTPExeDLL/x64
+/MultiOneTimePasswordExternalMultiOTPExeDLL/Win32
+/MultiOneTimePasswordResyncCredentialProvider/x64
+/MultiOneTimePasswordResyncCredentialProvider/Release
+/MutiOneTimePasswordCredentialProviderSetup/Debug
+/MutiOneTimePasswordCredentialProviderSetup/Release
+/ipch
+/Win32
+/x64
+/Credential Provider Samples Overview.mht
+/CredentialProviderSamples.sdf
+/MultiOneTimePassword.opensdf
+/MultiOneTimePassword.suo
+/MultiOneTimePasswordCredentialProviderSrc.7z
+/MultiOneTimePassword.sdf
+/MutiOneTimePasswordCredentialProviderSetup-x64/Release/MutiOneTimePasswordCredentialProviderSetup.msi
+/MutiOneTimePasswordCredentialProviderSetup-x64/Release/setup.exe
+/MultiOneTimePasswordCredentialProviderSetup-x86/Release/MutiOneTimePasswordCredentialProviderSetup.msi
+/MultiOneTimePasswordCredentialProviderSetup-x86/Release/setup.exe
+/helpers/Release English
+/MultiOneTimePasswordCredentialProvider/Release English
+/MultiOneTimePasswordCredentialProviderFilter/Release English
+/MultiOneTimePasswordCredentialProviderSetup-x86/Release English
+/MultiOneTimePasswordResyncCredentialProvider/Release English
+/MutiOneTimePasswordCredentialProviderSetup-x64/Release English
+/MultiOneTimePasswordCredentialProviderSetup-x86/Debug
+/MultiOneTimePasswordCredentialProviderSetup-x86/Release
+/MutiOneTimePasswordCredentialProviderSetup-x64/Debug
+/MutiOneTimePasswordCredentialProviderSetup-x64/Release
+/Releases
+/WixUIDialogBmp.psd
+/UpgradeLog.htm
+/UpgradeLog.XML
+/WixUIBannerBmp.bmp
+/WixUIBannerBmp.psd
+/WixUIDialogBmp.bmp
+*.suo
+*.user
+*.filters
+/helpers/bin
+/MultiOneTimePasswordCallExternalService/bin
+/MultiOneTimePasswordCredentialProvider/bin
+/MultiOneTimePasswordCredentialProviderFilter/bin
+/MultiOneTimePasswordCredentialProviderFilter/bin
+/MultiOneTimePasswordResyncCredentialProvider/bin
+/MultiOTPSetup/obj
+/MultiOTPSetup/bin

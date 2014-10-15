@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* * * * * * * * * * * * * * * * * * * * *
+**
+** Copyright 2012 Dominik Pretzsch
+** 
+**    Licensed under the Apache License, Version 2.0 (the "License");
+**    you may not use this file except in compliance with the License.
+**    You may obtain a copy of the License at
+** 
+**        http://www.apache.org/licenses/LICENSE-2.0
+** 
+**    Unless required by applicable law or agreed to in writing, software
+**    distributed under the License is distributed on an "AS IS" BASIS,
+**    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**    See the License for the specific language governing permissions and
+**    limitations under the License.
+**
+** * * * * * * * * * * * * * * * * * * */
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include $(sys.CURRENTDIR)\Config.wxi?>
+
+  <!-- Preconditions and pre-setups -->
+  <Product Id="67fce055-91cb-4966-8a8c-15e8ef2ff508" Language="1033"
+           Name="$(var.ProductName)"
+           Manufacturer="$(var.Publisher)"
+           Version="$(var.Version)"
+           UpgradeCode="d0189c62-8d46-4e91-8e4d-e09aa778885e">
+
+    <Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine"
+             Manufacturer="$(var.Publisher)"
+             Description="$(var.ProductName) $(var.Version) Setup"
+             Comments="A Comment" />
+
+    <!-- <Upgrade Id='cbdac7c5-20dc-425d-93f1-4afc19873074'>
+      <UpgradeVersion OnlyDetect='yes' Property='SELFFOUND' 
+                      Minimum='1.0.0' IncludeMinimum='yes'
+                      Maximum='$(var.Version)' IncludeMaximum='no'/>
+    </Upgrade> -->
+
+    <Property Id="ARPURLINFOABOUT" Value="$(var.AppURLInfoAbout)" />
+
+    <Condition Message="You need to be an administrator to install this product.">
+      Privileged
+    </Condition>
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt='DISK #1' />
+    <Property Id='DiskPrompt' Value="$(var.ProductName) Setup [1]" />
+
+    <Binary Id='WiXCustomActions' SourceFile='$(var.WiXCustomActions.TargetPath)' />
+
+    <Binary Id='InfoIcon' SourceFile='$(var.SolutionDir)info.ico' />
+    <Binary Id='HelpIcon' SourceFile='$(var.SolutionDir)help.ico' />
+    <Binary Id='ExclamIcon' SourceFile='$(var.SolutionDir)exclam.ico' />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
+    <!-- END Preconditions and pre-setups -->
+
+    <!-- Get values from registry if available. (What if unattended/silent install?)-->
+    <Property Id="PATH_TO_MULTIOTP">
+      <RegistrySearch Id="SearchPathToMultiOTP"     Root="HKLM" Key="SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)" Name="path_to_multiotp"     Win64="$(var.Win64)" Type="raw"/>
+    </Property>
+
+    <Property Id="TIMEOUT" Value="3">
+      <RegistrySearch Id="SearchTimeout"   Root="HKLM" Key="SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)" Name="timeout"   Win64="$(var.Win64)" Type="raw"/>
+    </Property>
+    <!-- END Get registry values -->
+
+    <!-- Sanitize TIMEOUT DWORD-value (e.g. #123 -> 123) -->
+    <Property Id="SANITIZE_DWORD" Value="TIMEOUT" />
+    <CustomAction Id='SanitizeTimeoutDword' BinaryKey='WiXCustomActions' DllEntry='SanitizeDwordFromRegistry' Execute='firstSequence'/>
+    <InstallUISequence>
+      <Custom Action='SanitizeTimeoutDword' After='CostFinalize'>Installed</Custom>
+    </InstallUISequence>
+    <!-- END Sanitize SOAP_TIMEOUT DWORD-value -->
+
+    <!-- Check user has administrator privileges -->
+    <CustomAction Id='CheckAdministratorPrivileges' BinaryKey='WiXCustomActions' DllEntry='CheckAdministratorPrivileges' Execute='firstSequence' Return='ignore' />
+    <CustomAction Id='CheckAdministratorPrivilegesFalse' Execute='firstSequence' Error='You need to be an administrator!' />
+    <InstallUISequence>
+      <Custom Action='CheckAdministratorPrivileges' Before='AppSearch'>Installed</Custom>
+      <Custom Action='CheckAdministratorPrivilegesFalse' After='CheckAdministratorPrivileges'>Installed AND USER_IS_ADMINISTRATOR = "0"</Custom>
+    </InstallUISequence>
+    <InstallExecuteSequence>
+      <Custom Action='CheckAdministratorPrivileges' Before='AppSearch'>Installed</Custom>
+      <Custom Action='CheckAdministratorPrivilegesFalse' After='CheckAdministratorPrivileges'>Installed AND USER_IS_ADMINISTRATOR = "0"</Custom>
+    </InstallExecuteSequence>
+    <!-- END Check user has administrator privileges -->
+
+    <!-- Directory definitions -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+
+      <!-- Visual Studio C++ Redistributable -->
+      <!--
+      <?if $(var.Platform) = x64 ?>
+      <Merge Id="VCRedist" SourceFile="$(var.SolutionDir)lib\merge\Microsoft_VC110_CRT_x64.msm" DiskId="1" Language="0"/>
+      <?else ?>
+      <Merge Id="VCRedist" SourceFile="$(var.SolutionDir)lib\merge\Microsoft_VC110_CRT_x86.msm" DiskId="1" Language="0"/>
+      <?endif ?>
+      -->
+      <!-- END Visual Studio C++ Redistributable -->
+
+      <!-- Directories/Components to be placed in ProgramFiles-folder -->
+      <Directory Id="$(var.PlatformProgramFilesFolder)">
+        <Directory Id="CompanyFolder" Name="$(var.Publisher)">
+          <Directory Id="INSTALLFOLDER" Name="$(var.ProductFolderName)">
+
+            <Component Id="DefaultFilesInProgrammFolder" Location="local" Guid="4dc4917a-85ef-444c-b806-6eb9251c17ab">
+              <!-- Files -->
+              <File Id="LicenseFile"
+                    Name="ApacheLicense.rtf"
+                    Source="$(var.SolutionDir)ApacheLicense.rtf"
+                    KeyPath="yes" />
+
+              <RemoveFile Id="RemoveInstallFiles" Name="*" On="uninstall"/>
+              <!-- END Files -->
+
+              <!-- Folders -->
+              <RemoveFolder Id="RemoveInstallFolder" On="uninstall"/>
+              <RemoveFolder Id="RemoveCompanyFolderIfEmpty" Directory="CompanyFolder" On="uninstall"/>
+              <!-- END Folders -->              
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+      <!-- END Directories/Components to be placed in ProgramFiles-folder -->
+
+      <!-- Directories/Components to be placed in System-folder -->
+      <Directory Id="$(var.PlatformSystemFolder)">
+
+        <!-- Core components -->
+        <Component Location="local" Guid="35fc61e9-d1c2-488f-8117-f4045ea731d4">
+          <!-- Files -->
+          <File Id="MultiOneTimePasswordCredentialProvider"
+                Name="$(var.MultiOneTimePasswordCredentialProvider.TargetFileName)"
+                Source="$(var.MultiOneTimePasswordCredentialProvider.TargetPath)"
+                KeyPath="yes" />
+
+          <RemoveFile Id="RemoveMultiOneTimePasswordCredentialProviderFiles" Name="$(var.MultiOneTimePasswordCredentialProvider.TargetFileName)" On="uninstall"/>
+          <!-- END Files -->
+
+          <!-- Registry -->
+          <RegistryKey Root='HKCR' Key='CLSID\{6F6F92D6-2D9C-46AD-8F4C-DAF92113B192}' ForceCreateOnInstall='yes'>
+            <RegistryValue Type='string' Value='MultiOneTimePasswordCredentialProvider' />
+            <RegistryKey Key='InprocServer32'>
+              <RegistryValue Type='string' Value='MultiOneTimePasswordCredentialProvider.dll' />
+              <RegistryValue Name='ThreadingModel' Type='string' Value='Apartment' />
+            </RegistryKey>
+          </RegistryKey>
+
+          <RegistryValue Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{6F6F92D6-2D9C-46AD-8F4C-DAF92113B192}' Type='string' Value='MultiOneTimePasswordCredentialProvider' />
+          
+          <RemoveRegistryKey Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{6F6F92D6-2D9C-46AD-8F4C-DAF92113B192}' Action='removeOnUninstall'/>
+
+          <!-- Configuration values (from dialogs/registry/unattended) -->
+          <!-- END Configuration values -->
+          <!-- END Registry -->
+
+        </Component>
+        
+        <Component Location="local" Guid="dc0896ad-be34-4bb8-a293-35f8d3f0cd72">
+          <!-- Files -->
+          <File Id="MultiOneTimePasswordResyncCredentialProvider"
+                Name="$(var.MultiOneTimePasswordResyncCredentialProvider.TargetFileName)"
+                Source="$(var.MultiOneTimePasswordResyncCredentialProvider.TargetPath)"
+                KeyPath="yes" />
+
+          <RemoveFile Id="RemoveMultiOneTimePasswordResyncCredentialProviderFiles" Name="$(var.MultiOneTimePasswordResyncCredentialProvider.TargetFileName)" On="uninstall"/>
+          <!-- END Files -->
+
+          <!-- Registry -->
+          <RegistryKey Root='HKCR' Key='CLSID\{86481B7E-8093-481B-A54E-8967EA82412B}' ForceCreateOnInstall='yes'>
+            <RegistryValue Type='string' Value='MultiOneTimePasswordResyncCredentialProvider' />
+            <RegistryKey Key='InprocServer32'>
+              <RegistryValue Type='string' Value='MultiOneTimePasswordResyncCredentialProvider.dll' />
+              <RegistryValue Name='ThreadingModel' Type='string' Value='Apartment' />
+            </RegistryKey>
+          </RegistryKey>
+
+          <RegistryValue Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{86481B7E-8093-481B-A54E-8967EA82412B}' Type='string' Value='MultiOneTimePasswordResyncCredentialProvider' />
+
+          <RemoveRegistryKey Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{86481B7E-8093-481B-A54E-8967EA82412B}' Action='removeOnUninstall'/>
+
+          <!-- Configuration values (from dialogs/registry/unattended) -->
+          <!-- END Configuration values -->
+          <!-- END Registry -->
+
+        </Component>
+
+        <Component Location="local" Guid="f2222c38-1896-4840-b2b2-3db74f535ceb">
+          <!-- Files -->
+          <File Id="MultiOneTimePasswordCallExternalService"
+                Name="$(var.MultiOneTimePasswordCallExternalService.TargetFileName)"
+                Source="$(var.MultiOneTimePasswordCallExternalService.TargetPath)"
+                KeyPath="yes" />
+
+          <RemoveFile Id="RemoveMultiOneTimePasswordCallExternalService" Name="$(var.MultiOneTimePasswordCallExternalService.TargetFileName)" On="uninstall"/>
+          <!-- END Files -->
+
+          <!-- Registry -->
+
+          <!-- Configuration values (from dialogs/registry/unattended) -->
+          <RegistryKey Root='HKLM' Key='SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)' ForceCreateOnInstall='yes'>
+            <RegistryValue Name='path_to_multiotp'     Type='string'  Value='[PATH_TO_MULTIOTP]'     />
+            <RegistryValue Name='timeout'   Type='integer' Value='[TIMEOUT]'   />
+          </RegistryKey>
+          <!-- END Configuration values -->
+          <!-- END Registry -->
+
+        </Component>
+        <!-- END Core components -->
+
+        <!-- ProviderFilter component -->
+        <Component Location="local" Guid="c2d954c4-ecdc-4ea8-a6c0-41d77c555148">
+          <!-- Files -->
+          <File Id="MultiOneTimePasswordCredentialProviderFilter"
+                Name="$(var.MultiOneTimePasswordCredentialProviderFilter.TargetFileName)"
+                Source="$(var.MultiOneTimePasswordCredentialProviderFilter.TargetPath)"
+                KeyPath="yes" />
+
+          <RemoveFile Id="RemoveMultiOneTimePasswordCredentialProviderFilterFiles" Name="$(var.MultiOneTimePasswordCredentialProviderFilter.TargetFileName)" On="uninstall" />
+          <!-- END Files -->
+
+          <!-- Registry -->
+          <RegistryKey Root='HKCR' Key='CLSID\{BF6C0870-5051-4DA1-B636-37B13F99C7D9}' ForceCreateOnInstall='yes'>
+            <RegistryValue Type='string' Value='MultiOneTimePasswordCredentialProviderFilter' />
+            <RegistryKey Key='InprocServer32'>
+              <RegistryValue Type='string' Value='MultiOneTimePasswordCredentialProviderFilter.dll' />
+              <RegistryValue Name='ThreadingModel' Type='string' Value='Apartment' />
+            </RegistryKey>
+          </RegistryKey>
+          <!-- END Registry -->
+        </Component>
+        <!-- END ProviderFilter component -->
+
+        <!-- Activate ProviderFilter (InstallAsDefault) component -->
+        <Component Id="ActivateCredentialProviderFilter" Location="local" Guid="51202178-d5f0-494b-9293-8b0bd72a7a48">
+          <RegistryValue Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Provider Filters\{BF6C0870-5051-4DA1-B636-37B13F99C7D9}' Type='string' Value='MultiOneTimePasswordCredentialProviderFilter' KeyPath='yes' />
+          <RemoveRegistryKey Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Provider Filters\{BF6C0870-5051-4DA1-B636-37B13F99C7D9}' Action='removeOnUninstall'/>
+        </Component>
+        <!-- END Activate ProviderFilter component -->
+
+      </Directory>
+      <!-- END Directories/Components to be placed in System-folder -->
+
+    </Directory>
+    <!-- END Directory definitions -->
+
+    <!-- Feature definitions -->
+    <Feature Id='Complete' Title='$(var.ProductName)' Description='Full install' Display='expand' Level='1' ConfigurableDirectory='INSTALLFOLDER' AllowAdvertise='no' Absent='disallow' InstallDefault="local">
+      <Feature Id='MainInstall' Title='Core components' Description='Core $(var.ProductName) components' Level='1' AllowAdvertise='no' Absent='disallow' InstallDefault="local">
+        <ComponentRef Id='MultiOneTimePasswordCredentialProvider' />
+        <ComponentRef Id='MultiOneTimePasswordResyncCredentialProvider' />
+        <ComponentRef Id='MultiOneTimePasswordCallExternalService' />
+        <ComponentRef Id='MultiOneTimePasswordCredentialProviderFilter' />
+      </Feature>
+
+      <Feature Id='InstallAsDefault' Title='Default provider' Description='Install $(var.ProductName) as default provider. No other provider will be allowed to be used for logon.' Level='1000' AllowAdvertise='no' InstallDefault="local">
+        <ComponentRef Id='ActivateCredentialProviderFilter' />
+      </Feature>
+
+      <!-- These are installed anyway: -->
+      <!--
+      <Feature Id="VCRedist" Title="Visual C++ 11.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+        <MergeRef Id='VCRedist'/>
+      </Feature>
+      -->
+
+      <ComponentRef Id='DefaultFilesInProgrammFolder' />
+    </Feature>
+    <!-- END Feature definitions -->
+
+    <!-- WiX Configuration -->
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)ApacheLicense.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)WixUIBannerBmp.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)WixUIDialogBmp.bmp" />    
+    <!-- END WiX Configuration -->
+
+    <!-- UI Configuration -->
+    <UI Id="MyWixUI_FeatureTree">
+      <UIRef Id="WixUI_FeatureTree"/>
+
+      <!-- Custom dialogs -->
+      <DialogRef Id="MultiOTPPathConfigurationDlg" />
+
+      <!-- Queue custom dialogs start/end -->
+      <!-- Start -->
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="MultiOTPPathConfigurationDlg">1</Publish>
+      <!-- End -->
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MultiOTPPathConfigurationDlg" Order="1">NOT Installed OR WixUI_InstallMode = "Change"</Publish>      
+      <!-- END Queue custom dialogs start/end -->
+
+      <InstallUISequence>
+        <Show Dialog="PayPalDlg" Sequence="32767">"$(var.PayPalDlg)" = "yes" AND <![CDATA[VersionMsi >= v5.0]]> AND NOT Installed OR WixUI_InstallMode = "Change"</Show>
+        <Show Dialog="PayPalWithoutHyperlinkDlg" Sequence="32767">"$(var.PayPalDlg)" = "yes" AND <![CDATA[VersionMsi < v5.0]]> AND NOT Installed OR WixUI_InstallMode = "Change"</Show>
+      </InstallUISequence>
+
+      <AdminUISequence>
+        <Show Dialog="PayPalDlg" Sequence="32767">"$(var.PayPalDlg)" = "yes" AND <![CDATA[VersionMsi >= v5.0]]> AND NOT Installed OR WixUI_InstallMode = "Change"</Show>
+        <Show Dialog="PayPalWithoutHyperlinkDlg" Sequence="32767">"$(var.PayPalDlg)" = "yes" AND <![CDATA[VersionMsi < v5.0]]> AND NOT Installed OR WixUI_InstallMode = "Change"</Show>
+      </AdminUISequence>
+    </UI>
+    <!-- END UI Configuration -->
+
+  </Product>
+</Wix>
