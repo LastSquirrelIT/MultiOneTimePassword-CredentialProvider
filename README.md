@@ -44,7 +44,7 @@ The Credential Provider
 
 *mOTP-CP* requires *multiOTP.exe* to be available on the target machine. You can download *multiOTP.exe* at http://www.multiotp.net .
 
-You have to add user accounts to *multiOTP.exe*, before installing *mOTP-CP*. See [[MultiOTP]] in the project Wiki-pages for a descriptive How-To on installing, configuring and testing *multiOTP.exe*.
+You have to add user accounts to *multiOTP.exe*, before installing *mOTP-CP*. See [MultiOTP](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTP) in the project Wiki-pages for a descriptive How-To on installing, configuring and testing *multiOTP.exe*.
 
 ***multiOTP.exe* features:**
  - Full client/server support
@@ -58,7 +58,7 @@ You have to add user accounts to *multiOTP.exe*, before installing *mOTP-CP*. Se
  - mobileOTP, Google Authenticator or the like (OATH/HOTP, OATH/TOTP or mobileOTP compatible token generator)
  - Windows Vista/7/2008/8/2012 both 32 and 64 bits
  - Administrator privileges
- - *multiOTP.exe* (http://www.multiotp.net) (read our Wiki for [[MultiOTP]])
+ - *multiOTP.exe* (http://www.multiotp.net) (read our Wiki for [MultiOTP](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTP))
  - Configured user account(s) in *multiOTP.exe* (use your Windows account name!)
 
  
@@ -70,7 +70,7 @@ Client-Server Operation
 
 This functionality including a cache feature (for laptops) is available in cooperation with SysCo and included into *multiOTP.exe*. [The new release](ttp://www.multiotp.net/website/index.php?language=en) also includes SMS-authentication, QRcode generation and scratch passwords.
 
-Just download the latest version of mOTP-CP and configure *multiOTP.exe* for network access and synchronization. See [[this wiki-page|MultiOTPClientServerSetUp]] for client-server installation instructions.
+Just download the latest version of mOTP-CP and configure *multiOTP.exe* for network access and synchronization. See [this wiki-page](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTPClientServerSetUp) for client-server installation instructions.
 
 
 ----
@@ -99,7 +99,7 @@ If you really want to know how to enable *mOTP-CP* in safe mode, reading our Use
 Unattended/Mass deployment of the provider
 ------------------------------------------
 
-To mass deploy *mOTP-CP* [[see the unattended installation wiki-page|UnattendedInstallation]] for the setup-file parameters.
+To mass deploy *mOTP-CP* [see the unattended installation wiki-page](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/UnattendedInstallation) for the setup-file parameters.
 
 
 ----
