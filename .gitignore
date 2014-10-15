@@ -52,3 +52,5 @@
 /MultiOneTimePasswordResyncCredentialProvider/bin
 /MultiOTPSetup/obj
 /MultiOTPSetup/bin
+/WiXCustomActions/obj
+/WiXCustomActions/bin
