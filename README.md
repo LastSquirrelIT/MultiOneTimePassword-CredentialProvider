@@ -22,9 +22,9 @@ The [screenshots](http://tinyurl.com/mOTP-Screenshots) are hosted on Google Driv
 Download and Install
 --------------------
 
-To download the Windows Installer packages (.msi) please head over [to our downloads section on Google Code](https://code.google.com/p/multi-one-time-password--credential-provider/downloads/list). Just extract the archive, follow the instructions on [this wiki page to install and configure *multiOTP.exe*](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTP) and install the provider's MSI Installer package.
+To download the Windows Installer packages (.msi) please head over [to our releases section here on GitHub](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/releases). Just extract the archive, follow the instructions on [this wiki page to install and configure *multiOTP.exe*](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTP) and install the provider's MSI Installer package.
 
-*Please note that future downloads will be available on our website, which will be published soon.*
+*Please note that future downloads will be available on our website - which will be published soon - too.*
 
 
 ----
