@@ -18,12 +18,25 @@ Screenshots
 
 The [screenshots](http://tinyurl.com/mOTP-Screenshots) are hosted on Google Drive.
 
+
+Download and Install
+--------------------
+
+To download the Windows Installer packages (.msi) please head over [to our downloads section on Google Code](https://code.google.com/p/multi-one-time-password--credential-provider/downloads/list). Just extract the archive, follow the instructions on [this wiki page to install and configure *multiOTP.exe*](https://github.com/LastSquirrelIT/MultiOneTimePassword-CredentialProvider/wiki/MultiOTP) and install the provider's MSI Installer package.
+
+*Please note that future downloads will be available on our website, which will be published soon.*
+
+
+----
+
+
 Support this Software and Donate
 --------------------------------
 
-mOTP-CP will stay free for private use. This project takes a measurable amount of my spare time - including support and help. You like this piece of software? I appreciate if you support the development with buying me a beer - or two. Further a donation will make you feel better - for sure :)
+The credential provider will stay **free for private use**. This project takes a measurable amount of my spare time - including support and help. You like this piece of software? I appreciate if you support the development with buying me a beer - or two. Further a donation will make you feel better - for sure :)
 
-Donate via *PayPal.* [![Donate via PayPal][4]][3]
+
+**Donate via *PayPal.*** [![Donate via PayPal][4]][3]
 <!--
 Or send a micro donation via *Flattr.* [![Flattr this][2]][1] ***NOT WORKING NOW***
 //-->
@@ -80,15 +93,15 @@ General information
 ===================
 Testing your installation
 -------------------------
-To verify that *mOTP-CP* works for you, you should deselect to install the software as default provider during installation. If it works, just re-install *mOTP-CP* with the option checked. If it fails, feel free to contact me or file an issue. Nobody's not perfect  :)
+To verify that *mOTP-CP* works for you, you should deselect to install the software as default provider during installation. If it works, just re-install *mOTP-CP* with the option checked. If it fails, feel free to contact me or file an issue. Nobody's perfect  :)
 
 Account locking / OTPs out of sync
 ----------------------------------
 
 *mOTP-CP* will add a virtual user account to your system called *"Resync OTP"*.
-In case that you can not logon to your account using OTPs, they may be out of sync. You may resynchronize them before logging in again.
+In that case you can not logon to your account using OTPs, they may be out of sync. You may resynchronize them before logging in again.
 
-By default multiotp.exe from SysCo locks accounts after six failed authentication requests. After that happened you may resychronize your OTPs and logon again.
+By default multiotp.exe from SysCo locks accounts after *six* failed authentication requests. After that happened you may resychronize your OTPs and logon again.
 
 Windows Safe Mode
 -----------------
