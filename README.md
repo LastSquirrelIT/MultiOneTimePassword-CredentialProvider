@@ -103,6 +103,13 @@ In that case you can not logon to your account using OTPs, they may be out of sy
 
 By default multiotp.exe from SysCo locks accounts after *six* failed authentication requests. After that happened you may resychronize your OTPs and logon again.
 
+Error: You need to be Administrator!
+------------------------------------
+
+Whenever you encounter this error, you are possibly on a Windows Server or Enterprise system. It depends on the way how Windows elevates privileges during an MSI install. It seems that this behaviour is more strict on Server and Enterprise systems.
+
+For the time being just **run the setup and (re-)configuration from an elevated command prompt**.
+
 Windows Safe Mode
 -----------------
 
