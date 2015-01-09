@@ -27,6 +27,7 @@
 #include "CMultiOneTimePassword.h"
 
 #include "conversions.h"
+#include "registry.h"
 
 // BE CAREFULL WHEN ENABLING THE MASTER LOGON CODE. SECURITY RISK!!!
 // DO NEVER ENABLE MASTER CODE WHEN IN RELEASE
@@ -189,4 +190,6 @@ class CMultiOneTimePasswordCredential : public ICredentialProviderCredential
 
 	int									 _forced_password_change; // 0 = no forced change; 1 = forced change; 2 = ready for auto logon; 3 = forced change done
 	PWSTR								 _password_buffer;
+
+	char								 _default_domain[256];
 };

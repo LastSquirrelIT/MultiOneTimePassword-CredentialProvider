@@ -43,7 +43,12 @@ CMultiOneTimePasswordCredential::CMultiOneTimePasswordCredential():
     ZERO(_rgFieldStrings);
 	ZERO(_default_login_text);
 
+	ZERO(_default_domain);
+
 	strcpy_s(_default_login_text, sizeof(_default_login_text), DEFAULT_LOGIN_TEXT);
+
+	// Read OpenOTP config
+	readRegistryValueString(CONF_DEFAULT_DOMAIN, sizeof(_default_domain), _default_domain);
 }
 
 CMultiOneTimePasswordCredential::~CMultiOneTimePasswordCredential()
@@ -559,7 +564,29 @@ HRESULT CMultiOneTimePasswordCredential::GetSerialization(
 	INIT_ZERO_WCHAR(username, 64);
 	INIT_ZERO_WCHAR(domain, 64);
 
-	_SeparateUserAndDomainName(_rgFieldStrings[SFI_OTP_USERNAME], username, sizeof(username), domain, sizeof(domain));
+	wchar_t *user_input = _wcsdup(_rgFieldStrings[SFI_OTP_USERNAME]);
+	wchar_t *temp;
+
+	if (wcsstr(user_input, L"localhost\\") == NULL) 
+	{
+		if (wcsstr(user_input, L"\\") == NULL && _default_domain[0] != NULL) 
+		{
+			__CharToWideChar(_default_domain, temp);
+
+			wcscat(temp, L"\\");
+			wcscat(temp, user_input);
+
+			user_input = temp;
+		}
+
+		_SeparateUserAndDomainName(user_input, username, sizeof(username), domain, sizeof(domain));
+	} 
+	else 
+	{
+		_SeparateUserAndDomainName(user_input, username, sizeof(username), domain, sizeof(domain));
+
+		ZERO (domain); // because "localhost" is no domain, so the computer name will be fetched (later)
+	}
 
 	// Set domain name:
 	if (domain[0])
