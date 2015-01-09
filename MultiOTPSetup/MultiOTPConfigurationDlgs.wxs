@@ -29,8 +29,14 @@
           <Publish Event="SpawnDialog" Value="PathToMultiOTPInfoDlg">1</Publish>
         </Control>
 
-        <Control Id="SoapTimeoutLabel" Type="Text" X="45" Y="125" Width="220" Height="15" TabSkip="no" Text="&amp;Timeout (secs): (optional)" />
-        <Control Id="SoapTimeoutEdit" Type="Edit" X="45" Y="137" Width="220" Height="18" Property="TIMEOUT" Text="{3}" Integer="yes" />
+        <Control Id="DefaultDomainLabel" Type="Text" X="45" Y="110" Width="220" Height="15" TabSkip="no" Text="&amp;Default Domain: (optional)" />
+        <Control Id="DefaultDomainEdit" Type="Edit" X="45" Y="122" Width="220" Height="18" Property="DEFAULT_DOMAIN" Text="{64}" />
+        <Control Id="DefaultDomainInfo" Type="PushButton" X="270" Y="121" Width="18" Height="18" FixedSize="yes" IconSize="16" Text="HelpIcon" Icon="yes">
+          <Publish Event="SpawnDialog" Value="DefaultDomainInfoDlg">1</Publish>
+        </Control>
+
+        <Control Id="SoapTimeoutLabel" Type="Text" X="45" Y="147" Width="220" Height="15" TabSkip="no" Text="&amp;Timeout (secs): (optional)" />
+        <Control Id="SoapTimeoutEdit" Type="Edit" X="45" Y="159" Width="220" Height="18" Property="TIMEOUT" Text="{3}" Integer="yes" />
 
         <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="&amp;Back">
           <Publish Event="NewDialog" Value="CustomizeDlg">1</Publish>
@@ -87,6 +93,21 @@
         <Control Id="Text1" Type="Text" X="48" Y="0" Width="482" Height="75" TabSkip="no" NoPrefix="yes" NoWrap="no">
           <Text>
             !(loc.PathToMultiOTPInfo)
+          </Text>
+        </Control>
+      </Dialog>
+    </UI>
+
+    <UI>
+      <Dialog Id="DefaultDomainInfoDlg" Width="500" Height="100" Title="[ProductName] Setup" NoMinimize="yes" >
+        <Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24"
+          ToolTip="Information icon" FixedSize="yes" IconSize="32" Text="InfoIcon" />
+        <Control Id="Return" Type="PushButton" X="340" Y="80" Width="56" Height="17" Default="yes" Cancel="yes" Text="&amp;Return">
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+        <Control Id="Text1" Type="Text" X="48" Y="0" Width="482" Height="75" TabSkip="no" NoPrefix="yes" NoWrap="no">
+          <Text>
+            !(loc.DefaultDomainInfo)
           </Text>
         </Control>
       </Dialog>
