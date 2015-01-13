@@ -19,7 +19,7 @@
 ** * * * * * * * * * * * * * * * * * * */
 -->
 <Include>
-  <?define Version = "2.1.2" ?>
+  <?define Version = "2.2.1" ?>
 
   <?define BaseProductName = "MultiOTP Credential Provider for Windows" ?>
   <?define Manufacturer = "Last Squirrel IT" ?>
