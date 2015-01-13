@@ -7,9 +7,9 @@ void __WideCharToChar(
 	 );
 
 void __CharToWideChar(
-		__in  wchar_t* data,
+		__in  char*	   data,
 		__in  int      buffSize,
-		__out char*    pc
+		__out wchar_t*    pc
 	 );
 
 void __CharToWideChar(

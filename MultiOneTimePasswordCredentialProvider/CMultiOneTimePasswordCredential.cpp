@@ -43,7 +43,12 @@ CMultiOneTimePasswordCredential::CMultiOneTimePasswordCredential():
     ZERO(_rgFieldStrings);
 	ZERO(_default_login_text);
 
+	ZERO(_default_domain);
+
 	strcpy_s(_default_login_text, sizeof(_default_login_text), DEFAULT_LOGIN_TEXT);
+
+	// Read OpenOTP config
+	readRegistryValueString(CONF_DEFAULT_DOMAIN, sizeof(_default_domain), _default_domain);
 }
 
 CMultiOneTimePasswordCredential::~CMultiOneTimePasswordCredential()
@@ -559,7 +564,48 @@ HRESULT CMultiOneTimePasswordCredential::GetSerialization(
 	INIT_ZERO_WCHAR(username, 64);
 	INIT_ZERO_WCHAR(domain, 64);
 
-	_SeparateUserAndDomainName(_rgFieldStrings[SFI_OTP_USERNAME], username, sizeof(username), domain, sizeof(domain));
+	wchar_t *user_input = _wcsdup(_rgFieldStrings[SFI_OTP_USERNAME]);
+	INIT_ZERO_WCHAR(temp, (sizeof(domain) + sizeof(L'\\') + sizeof(username)) / sizeof(wchar_t)); // domain + \ + username
+
+#ifdef _DEBUG
+	//*************************** DEBUG:
+	char code[1024];
+	OutputDebugStringA("user_input:\t\t"); OutputDebugStringW(user_input); OutputDebugStringA("\n");	
+	OutputDebugStringA("default domain:\t\t"); OutputDebugStringA(_default_domain); OutputDebugStringA("\n");
+	//*/
+#endif
+
+	if (wcsstr(user_input, L"localhost\\") == NULL && _cpus == CPUS_LOGON) 
+	{
+#ifdef _DEBUG
+		//*************************** DEBUG:
+		OutputDebugStringA("not localhost\\\\*"); OutputDebugStringA("\n");	
+		//*/
+#endif
+
+		if (wcsstr(user_input, L"\\") == NULL && _default_domain && _default_domain[0]) 
+		{
+#ifdef _DEBUG
+			//*************************** DEBUG:
+			OutputDebugStringA("no domain specified"); OutputDebugStringA("\n");	
+			//*/
+#endif
+			__CharToWideChar(_default_domain, sizeof(temp) / sizeof(wchar_t), temp);
+
+			wcscat_s(temp, sizeof(temp) / sizeof(wchar_t), L"\\");
+			wcscat_s(temp, sizeof(temp) / sizeof(wchar_t), user_input);
+
+			user_input = temp;
+		}
+
+		_SeparateUserAndDomainName(user_input, username, sizeof(username) / sizeof(wchar_t), domain, sizeof(domain) / sizeof(wchar_t));
+	} 
+	else 
+	{
+		_SeparateUserAndDomainName(user_input, username, sizeof(username) / sizeof(wchar_t), domain, sizeof(domain) / sizeof(wchar_t));
+
+		ZERO (domain); // because "localhost" is no domain, so the computer-name will be fetched (later)
+	}
 
 	// Set domain name:
 	if (domain[0])

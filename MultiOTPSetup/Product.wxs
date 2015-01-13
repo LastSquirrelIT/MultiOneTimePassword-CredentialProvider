@@ -65,6 +65,10 @@
     <Property Id="TIMEOUT" Value="3">
       <RegistrySearch Id="SearchTimeout"   Root="HKLM" Key="SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)" Name="timeout"   Win64="$(var.Win64)" Type="raw"/>
     </Property>
+
+    <Property Id="DEFAULT_DOMAIN">
+      <RegistrySearch Id="SearchDefaultDomain"     Root="HKLM" Key="SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)" Name="default_domain"     Win64="$(var.Win64)" Type="raw"/>
+    </Property>
     <!-- END Get registry values -->
 
     <!-- Sanitize TIMEOUT DWORD-value (e.g. #123 -> 123) -->
@@ -203,8 +207,9 @@
 
           <!-- Configuration values (from dialogs/registry/unattended) -->
           <RegistryKey Root='HKLM' Key='SOFTWARE\$(var.Manufacturer)\$(var.SimpleProductName)' ForceCreateOnInstall='yes'>
-            <RegistryValue Name='path_to_multiotp'     Type='string'  Value='[PATH_TO_MULTIOTP]'     />
-            <RegistryValue Name='timeout'   Type='integer' Value='[TIMEOUT]'   />
+            <RegistryValue Name='path_to_multiotp' Type='string'  Value='[PATH_TO_MULTIOTP]'     />
+            <RegistryValue Name='timeout'          Type='integer' Value='[TIMEOUT]'   />
+            <RegistryValue Name='default_domain'   Type='string'  Value='[DEFAULT_DOMAIN]'     />
           </RegistryKey>
           <!-- END Configuration values -->
           <!-- END Registry -->

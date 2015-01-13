@@ -21,9 +21,15 @@
 <WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
   <!-- Configuration -->
   <String Id="PathToMultiOTPInfo">
-    A path to a directory containing multiotp.exe
-    Just use the directory path EXCLUDING multiotp.exe!
+A path to a directory containing multiotp.exe
+Just use the directory path EXCLUDING multiotp.exe!
 
-    Example: C:\multiotp\ 
+Example: C:\multiotp\ 
+  </String>
+  <String Id="DefaultDomainInfo">
+You can set the default Domain to be authenticated to when no domain is specified in the login form.
+To specify a login Domain during login enter a username in the form 'domain\username'.
+
+Note: To logon locally with a default Domain set, type "localhost\username" into the username field.
   </String>
 </WixLocalization>
