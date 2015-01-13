@@ -105,7 +105,7 @@
         <Control Id="Return" Type="PushButton" X="340" Y="80" Width="56" Height="17" Default="yes" Cancel="yes" Text="&amp;Return">
           <Publish Event="EndDialog" Value="Return">1</Publish>
         </Control>
-        <Control Id="Text1" Type="Text" X="48" Y="0" Width="482" Height="75" TabSkip="no" NoPrefix="yes" NoWrap="no">
+        <Control Id="Text1" Type="Text" X="48" Y="0" Width="482" Height="95" TabSkip="no" NoPrefix="yes" NoWrap="no">
           <Text>
             !(loc.DefaultDomainInfo)
           </Text>
