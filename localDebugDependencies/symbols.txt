@@ -1,3 +1,10 @@
 host: SRV*S:\Dev\WinDbgSymbols*http://msdl.microsoft.com/download/symbols
 
-target: .sympath SRV*C:\DebugSymbols*http://msdl.microsoft.com/download/symbols;C:\DebugSymbols\MOTPCP
+target: .sympath SRV*C:\DebugSymbols*http://msdl.microsoft.com/download/symbols;C:\DebugSymbols
+
+.sympath C:\DebugSymbols
+
+https://developer.mozilla.org/en-US/docs/How_to_get_a_stacktrace_with_WinDbg
+!sym noisy
+
+symchk /r c:\windows\system32\ntdll.dll /s SRV*c:\DebugSymbols\*http://msdl.microsoft.com/download/symbols

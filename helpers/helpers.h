@@ -95,9 +95,3 @@ HRESULT DomainUsernameStringAlloc(
     __in PCWSTR pwszUsername,
     __deref_out PWSTR* ppwszDomainUsername
     );
-
-HRESULT KerbChangePasswordPack(
-    const KERB_CHANGEPASSWORD_REQUEST& kcpr,
-    BYTE** prgb,
-    DWORD* pcb
-    );
