@@ -1,32 +1,25 @@
 #include "registry.h"
 
-DWORD readRegistryValueString( __in int conf_value, __in int buffer_size, __deref_out_opt char* data ) {
-	wchar_t lszValue[1024];
+DWORD readRegistryValueString( __in CONF_VALUE conf_value, __in int buffer_size, __deref_out_opt char* data) {
+	//char lszValue[1024];
 	HKEY hKey;
 	LONG returnStatus;
 	DWORD dwType = REG_SZ;
 	DWORD dwSize = 0;
 
-	PWSTR confValueName = s_CONF_VALUES[conf_value];
+	LPCSTR confValueName = s_CONF_VALUES[conf_value];
 
-	returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, KEY_QUERY_VALUE, &hKey);
+	returnStatus = RegOpenKeyExA(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, KEY_QUERY_VALUE, &hKey);
 	if (returnStatus == ERROR_SUCCESS)
 	{
 		dwSize = buffer_size;
 
-		returnStatus = RegQueryValueEx(hKey, confValueName, NULL, &dwType,(LPBYTE)&lszValue, &dwSize);
-		if (returnStatus == ERROR_SUCCESS)
+		returnStatus = RegQueryValueExA(hKey, confValueName, NULL, &dwType,(LPBYTE)data, &dwSize);
+		if (returnStatus != ERROR_SUCCESS)
 		{
-			WideCharToMultiByte(
-				CP_ACP,
-				0,
-				lszValue,
-				-1,
-				data,
-				dwSize, 
-				NULL,
-				NULL);
+			dwSize = 0;
 		}
+
 		RegCloseKey(hKey);
 	}
 
@@ -40,20 +33,63 @@ DWORD readRegistryValueInteger( __in CONF_VALUE conf_value, __deref_out_opt int*
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = 0;
 
-	PWSTR confValueName = s_CONF_VALUES[conf_value];
+	LPCSTR confValueName = s_CONF_VALUES[conf_value];
 
-	returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, KEY_QUERY_VALUE, &hKey);
+	returnStatus = RegOpenKeyExA(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, KEY_QUERY_VALUE, &hKey);
 	if (returnStatus == ERROR_SUCCESS)
 	{
 		dwSize = sizeof(DWORD);
 
-		returnStatus = RegQueryValueEx(hKey, confValueName, NULL, &dwType, reinterpret_cast<LPBYTE>(&lszValue), &dwSize);
+		returnStatus = RegQueryValueExA(hKey, confValueName, NULL, &dwType, reinterpret_cast<LPBYTE>(&lszValue), &dwSize);
 		if (returnStatus == ERROR_SUCCESS)
 		{
 			*data = lszValue;
 		}
+		else
+		{
+			dwSize = 0;
+		}
+
 		RegCloseKey(hKey);
 	}
 
 	return dwSize;
+}
+
+DWORD writeRegistryValueString( __in CONF_VALUE conf_value, __in char* data, __in int buffer_size )
+{
+	HKEY hKey;
+	LONG returnStatus;
+	DWORD dwType = REG_SZ;
+
+	LPCSTR confValueName = s_CONF_VALUES[conf_value];
+
+	returnStatus = RegCreateKeyExA(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
+	if (returnStatus == ERROR_SUCCESS)
+	{
+		returnStatus = RegSetKeyValueA(hKey, REGISTRY_BASE_KEY, confValueName, dwType, data, buffer_size);
+
+		RegCloseKey(hKey);
+	}
+
+	return returnStatus;
+}
+
+DWORD writeRegistryValueInteger( __in CONF_VALUE conf_value, __in int data )
+{
+	HKEY hKey;
+	LONG returnStatus;
+	DWORD dwType = REG_DWORD;
+
+	LPCSTR confValueName = s_CONF_VALUES[conf_value];
+
+	returnStatus = RegCreateKeyExA(HKEY_LOCAL_MACHINE, REGISTRY_BASE_KEY, NULL, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
+	if (returnStatus == ERROR_SUCCESS)
+	{
+		returnStatus = RegSetKeyValueA(hKey, REGISTRY_BASE_KEY, confValueName, dwType, &data, sizeof(int));
+
+		RegCloseKey(hKey);
+	}
+
+	return returnStatus;
 }

@@ -16,10 +16,7 @@
 **
 ** * * * * * * * * * * * * * * * * * * */
 
-#include <windows.h>
-#include <unknwn.h>
 #include "Dll.h"
-#include "helpers.h"
 
 static LONG g_cRef = 0;   // global dll reference count
 HINSTANCE g_hinst = NULL; // global dll hinstance
