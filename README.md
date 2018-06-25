@@ -1,3 +1,5 @@
+**This Repository is not maintained anymore. Please head over to this great fork: https://github.com/multiOTP/multiOTPCredentialProvider**
+
 Hi, this is Dominik from Last Squirrel IT. Here I'm providing my Credential Provider (CP) for Microsoft Windows-based systems.
 
 MultiOneTimePassword Credential Provider
